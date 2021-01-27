@@ -1,0 +1,68 @@
+openapi: "3.0.0"
+info:
+  version: "1.0.0"
+  title: "SQL Lineage Analyser"
+  contact:
+    email: "wzy816@gmail.com"
+
+servers:
+  - url: "http://127.0.0.1:5100"
+
+paths:
+  /:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                dialect:
+                  type: "string"
+                  description: "sql dialect"
+                  enum: ["SparkSQL","PrestoSQL"]
+                sql:
+                  type: "string"
+                  description: "sql query string"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  code:
+                    type: "integer"
+                    description: "1 for success, 0 for error."
+                    enum: [1,0]
+                  data:
+                    type: "object"
+                    properties:
+                      Dependencies:
+                        type: "array"
+                        items:
+                          $ref: "#/components/schemas/Dependencies"
+                      Fields:
+                        type: "array"
+                        items:
+                          $ref: "#/components/schemas/Fields"
+                  msg:
+                    type: "string"
+                    description: "Success or error reason."
+
+components:
+  schemas:
+    Dependencies:
+      type: "object"
+      properties:
+        Database:
+          type: "string"
+        Table:
+          type: "string"
+    Fields:
+      type: "object"
+      properties:
+        Name:
+          type: "string"
